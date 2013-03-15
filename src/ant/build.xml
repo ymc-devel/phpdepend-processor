@@ -1,0 +1,77 @@
+<!--
+    phpdepend-processor
+
+    Makes PHPDepend code metrics readable
+
+    @author     Frank Neff <frank.neff@ymc.ch>
+    @since      2013-03-15
+    @license    MIT (see license.md)
+    @source     https://github.com/ymc-devel/phpdepend-processor
+-->
+
+<!--
+    Probably override your ${basedir}:
+    @see http://ant.apache.org/manual/using.html
+-->
+<project name="MyProject" default="dist" basedir=".">
+
+    <!-- make your configurations here -->
+    <property
+        name="ymc.jdepend-processor.srcdir"
+        location="${basedir}/path/to/the/sources/to/analyze"
+        />
+
+    <property
+        name="ymc.jdepend-processor.basedir"
+        location="${basedir}/path/to/this/repo"
+        />
+
+    <property
+        name="ymc.jdepend-processor.builddir"
+        location="${basedir}/build"
+        />
+
+    <target name="pdepend">
+
+        <!--
+            Change, if you are using composer instead of PEAR:
+
+        <echo>Invoking pdepend from composer: ${basedir}/vendor/bin/pdepend</echo>
+        <exec executable="${basedir}/vendor/bin/pdepend">
+        -->
+        <echo>Invoking pdepend from pear</echo>
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${ymc.jdepend-processor.builddir}/logs/jdepend.xml"/>
+            <arg value="--jdepend-chart=${ymc.jdepend-processor.builddir}/phpdepend/jdepend.svg"/>
+            <arg value="--overview-pyramid=${ymc.jdepend-processor.builddir}/phpdepend/overview-pyramid.svg"/>
+
+            <arg path="${ymc.jdepend-processor.srcdir}"/>
+        </exec>
+
+        <!-- Generate HTML report -->
+        <echo>Generating HTML report to: ${ymc.jdepend-processor.builddir}/phpdepend/report.html</echo>
+        <xslt
+            in="${ymc.jdepend-processor.builddir}/logs/jdepend.xml"
+            out="${ymc.jdepend-processor.builddir}/phpdepend/report.html"
+            style="${ymc.jdepend-processor.basedir}/xsl/jdepend-report.xsl"
+            />
+
+        <!-- Detect if cycles -->
+        <echo>Detecting cycles...</echo>
+        <xslt
+            in="${ymc.jdepend-processor.builddir}/logs/jdepend.xml"
+            out="${ymc.jdepend-processor.builddir}/phpdepend/cycle-check.txt"
+            style="${basedir}/${ymc.jdepend-processor.basedir}/xsl/jdepend-cycles-check.xsl"
+            />
+
+        <!-- Fail if cycles -->
+        <!-- uncomment to fail the build on cyclic dependancies
+        <fail message="There are cycles in the packages, see ${basedir}/build/phpdepend/report.html">
+            <condition>
+                <length file="${basedir}/build/phpdepend/cycle-check.txt" when="gt" length="0"/>
+            </condition>
+        </fail>
+        -->
+    </target>
+
+</project>

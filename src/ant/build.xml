@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
     phpdepend-processor
 
@@ -19,17 +20,17 @@
     <property
         name="ymc.jdepend-processor.srcdir"
         location="${basedir}/path/to/the/sources/to/analyze"
-        />
+    />
 
     <property
         name="ymc.jdepend-processor.basedir"
         location="${basedir}/path/to/this/repo"
-        />
+    />
 
     <property
         name="ymc.jdepend-processor.builddir"
         location="${basedir}/build"
-        />
+    />
 
     <target name="pdepend">
 
@@ -53,25 +54,22 @@
         <xslt
             in="${ymc.jdepend-processor.builddir}/logs/jdepend.xml"
             out="${ymc.jdepend-processor.builddir}/phpdepend/report.html"
-            style="${ymc.jdepend-processor.basedir}/xsl/jdepend-report.xsl"
-            />
+            style="${ymc.jdepend-processor.basedir}/src/xsl/jdepend-report.xsl"
+        />
 
         <!-- Detect if cycles -->
         <echo>Detecting cycles...</echo>
         <xslt
             in="${ymc.jdepend-processor.builddir}/logs/jdepend.xml"
             out="${ymc.jdepend-processor.builddir}/phpdepend/cycle-check.txt"
-            style="${basedir}/${ymc.jdepend-processor.basedir}/xsl/jdepend-cycles-check.xsl"
-            />
+            style="${basedir}/${ymc.jdepend-processor.basedir}/src/xsl/jdepend-cycles-check.xsl"
+        />
 
-        <!-- Fail if cycles -->
-        <!-- uncomment to fail the build on cyclic dependancies
-        <fail message="There are cycles in the packages, see ${basedir}/build/phpdepend/report.html">
+        <!-- Fail build if cycles -->
+        <fail message="There are cycles in the packages, see ${ymc.jdepend-processor.builddir}/phpdepend/report.html">
             <condition>
                 <length file="${basedir}/build/phpdepend/cycle-check.txt" when="gt" length="0"/>
             </condition>
         </fail>
-        -->
     </target>
-
 </project>

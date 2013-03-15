@@ -1,9 +1,9 @@
 # phpdepend-processor
 
-These snippets should help you to generate PHPDepend metrics for your PHP code.
-The included task-definition for [Apache Ant](http://ant.apache.org/) will generate the metrics and process them to a human readable HTML document using XSLT.
+These snippets should help you to generate [PHPDepend](http://pdepend.org/) metrics for your PHP project.
+The included task-definition for [Apache Ant](http://ant.apache.org/) will generate the metrics and process them to a human-readable HTML document using XSL transformations.
 
-The Ant-Task definition can be found in [src/ant/build.xml](src/ant/build.xml) and the used processors are in [src/xsl](src/xsl).
+The definition of the ant task can be found in [src/ant/build.xml](src/ant/build.xml) and the used stylesheets are in [src/xsl](src/xsl).
 
 ## Examples
 In the [examples directory](examples/), you can find some demo content generated with this stuff.
